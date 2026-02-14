@@ -22,10 +22,16 @@ def filter_high_impact_usd_events():
 
         event_count = 0
         for row in reader:
+
             if row['Country'] == 'USD' and row['Impact'] == 'High':
+                original_time = datetime.strptime(row['Time'].strip(), "%I:%M%p")
+                adjusted_time = original_time.replace(hour=(original_time.hour + 2) % 24)
+                new_time = adjusted_time.strftime("%I:%M%p").lower()
+
+
                 writer.writerow({
                     'Date': row['Date'],
-                    'Time': row['Time'],
+                    'Time': new_time,
                     'Title': row['Title'],
                     'Country': row['Country'],
                     'Impact': row['Impact']
@@ -108,7 +114,7 @@ def main():
 
     # Example: Get events for a specific date
     # Uncomment to use:
-    # get_events_for_date('02-11-2026')
+    get_events_for_date('02-11-2026')
 
 
 if __name__ == "__main__":
